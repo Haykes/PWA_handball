@@ -21,7 +21,7 @@ if ('Notification' in window && navigator.serviceWorker) {
                 if (registration.pushManager) {
                     registration.pushManager.subscribe({
                         userVisibleOnly: true,
-                        applicationServerKey: 'YOUR_PUBLIC_VAPID_KEY'
+                        applicationServerKey: 'BDzOIRA-PK1Y7lNneXet9nR4xkIMUMn2jr8t3eHTlljN4rtKM4TxbHNJbIrbAzoMLpAoca1D2aGtShNAhSctFWA'
                     }).then(subscription => {
                         console.log('User is subscribed:', subscription);
                     }).catch(err => {
