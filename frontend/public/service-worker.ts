@@ -7,24 +7,22 @@ const urlsToCache = [
     '/icons/android/android-launchericon-512-512.png'
 ];
 
-self.addEventListener('install', (event: ExtendableEvent) => {
+self.addEventListener('push', function(event) {
+    const data = event.data.json();
+    console.log('Push received:', data);
+    const options = {
+        body: data.body,
+        icon: 'icons/icon-192x192.png'
+    };
     event.waitUntil(
-        caches.open(CACHE_NAME)
-            .then((cache) => {
-                console.log('Opened cache');
-                return cache.addAll(urlsToCache);
-            })
+        self.registration.showNotification(data.title, options)
     );
 });
 
-self.addEventListener('fetch', (event: FetchEvent) => {
-    event.respondWith(
-        caches.match(event.request)
-            .then((response) => {
-                if (response) {
-                    return response;
-                }
-                return fetch(event.request);
-            })
+self.addEventListener('notificationclick', function(event) {
+    event.notification.close();
+    event.waitUntil(
+        clients.openWindow('/')
     );
 });
+
