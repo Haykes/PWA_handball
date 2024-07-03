@@ -1,4 +1,4 @@
-import React, { useState, ChangeEvent, FormEvent } from 'react';
+import React, { useState } from 'react';
 
 interface SuggestionFormProps {
     onNewSuggestion: (suggestion: Suggestion) => void;
@@ -17,55 +17,57 @@ const SuggestionForm: React.FC<SuggestionFormProps> = ({ onNewSuggestion }) => {
     const [description, setDescription] = useState('');
     const [author, setAuthor] = useState('');
 
-    const handleSubmit = (e: FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        fetch('/api/suggestions', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ title, description, author })
-        })
-            .then(response => response.json())
-            .then(data => {
-                onNewSuggestion(data);
-                setTitle('');
-                setDescription('');
-                setAuthor('');
-            });
-    };
 
-    const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        const { name, value } = e.target;
-        if (name === 'title') setTitle(value);
-        if (name === 'description') setDescription(value);
-        if (name === 'author') setAuthor(value);
+        const newSuggestion = { title, description, author };
+
+        try {
+            const response = await fetch('http://localhost:5000/api/suggestions', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(newSuggestion),
+            });
+
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+
+            const suggestion = await response.json();
+            onNewSuggestion(suggestion);
+            setTitle('');
+            setDescription('');
+            setAuthor('');
+        } catch (error) {
+            console.error('Error submitting suggestion:', error);
+        }
     };
 
     return (
         <form onSubmit={handleSubmit}>
             <input
                 type="text"
-                name="title"
-                placeholder="Title"
                 value={title}
-                onChange={handleChange}
+                onChange={(e) => setTitle(e.target.value)}
+                placeholder="Title"
                 required
             />
             <textarea
-                name="description"
-                placeholder="Description"
                 value={description}
-                onChange={handleChange}
-                required
-            ></textarea>
-            <input
-                type="text"
-                name="author"
-                placeholder="Your Name"
-                value={author}
-                onChange={handleChange}
+                onChange={(e) => setDescription(e.target.value)}
+                placeholder="Description"
                 required
             />
-            <button type="submit">Add Suggestion</button>
+            <input
+                type="text"
+                value={author}
+                onChange={(e) => setAuthor(e.target.value)}
+                placeholder="Author"
+                required
+            />
+            <button type="submit">Submit</button>
         </form>
     );
 };
