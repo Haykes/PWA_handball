@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { TextField, Button, Box } from '@mui/material';
 
 interface SuggestionFormProps {
     onNewSuggestion: (suggestion: Suggestion) => void;
@@ -46,29 +47,47 @@ const SuggestionForm: React.FC<SuggestionFormProps> = ({ onNewSuggestion }) => {
     };
 
     return (
-        <form onSubmit={handleSubmit}>
-            <input
-                type="text"
+        <Box component="form" onSubmit={handleSubmit} sx={{ mt: 3 }}>
+            <TextField
+                variant="outlined"
+                margin="normal"
+                required
+                fullWidth
+                id="title"
+                label="Title"
+                name="title"
                 value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                placeholder="Title"
-                required
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setTitle(e.target.value)}
+                autoFocus
             />
-            <textarea
+            <TextField
+                variant="outlined"
+                margin="normal"
+                required
+                fullWidth
+                name="description"
+                label="Description"
+                id="description"
                 value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                placeholder="Description"
-                required
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setDescription(e.target.value)}
+                multiline
+                rows={4}
             />
-            <input
-                type="text"
+            <TextField
+                variant="outlined"
+                margin="normal"
+                required
+                fullWidth
+                name="author"
+                label="Author"
+                id="author"
                 value={author}
-                onChange={(e) => setAuthor(e.target.value)}
-                placeholder="Author"
-                required
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setAuthor(e.target.value)}
             />
-            <button type="submit">Submit</button>
-        </form>
+            <Button type="submit" fullWidth variant="contained" color="primary">
+                Submit
+            </Button>
+        </Box>
     );
 };
 

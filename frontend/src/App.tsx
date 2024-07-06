@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Container, CssBaseline, Typography } from '@mui/material';
 import SuggestionList from './components/SuggestionList';
 import SuggestionForm from './components/SuggestionForm';
 
@@ -101,11 +102,14 @@ const App: React.FC = () => {
     }, []);
 
     return (
-        <div>
-            <h1>Handball Idea Box</h1>
+        <Container component="main" maxWidth="md">
+            <CssBaseline />
+            <Typography variant="h2" component="h1" gutterBottom>
+                Handball Idea Box
+            </Typography>
             <SuggestionForm onNewSuggestion={handleNewSuggestion} />
             <SuggestionList suggestions={suggestions} onVote={handleVote} />
-        </div>
+        </Container>
     );
 };
 

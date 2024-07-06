@@ -1,4 +1,6 @@
 import React from 'react';
+import { List, ListItem, ListItemText, ListItemSecondaryAction, IconButton, Typography } from '@mui/material';
+import { ThumbUp, ThumbDown } from '@mui/icons-material';
 
 interface Suggestion {
     id: number;
@@ -15,18 +17,38 @@ interface SuggestionListProps {
 
 const SuggestionList: React.FC<SuggestionListProps> = ({ suggestions, onVote }) => {
     return (
-        <ul>
+        <List>
             {suggestions.map(suggestion => (
-                <li key={suggestion.id}>
-                    <h3>{suggestion.title}</h3>
-                    <p>{suggestion.description}</p>
-                    <p>By: {suggestion.author}</p>
-                    <p>Votes: {suggestion.votes}</p>
-                    <button onClick={() => onVote(suggestion.id, 1)}>Upvote</button>
-                    <button onClick={() => onVote(suggestion.id, -1)}>Downvote</button>
-                </li>
+                <ListItem key={suggestion.id} alignItems="flex-start">
+                    <ListItemText
+                        primary={<Typography variant="h6">{suggestion.title}</Typography>}
+                        secondary={
+                            <>
+                                <Typography component="span" variant="body2" color="textPrimary">
+                                    {suggestion.description}
+                                </Typography>
+                                <br />
+                                <Typography component="span" variant="body2" color="textSecondary">
+                                    By: {suggestion.author}
+                                </Typography>
+                                <br />
+                                <Typography component="span" variant="body2" color="textPrimary">
+                                    Votes: {suggestion.votes}
+                                </Typography>
+                            </>
+                        }
+                    />
+                    <ListItemSecondaryAction>
+                        <IconButton edge="end" onClick={() => onVote(suggestion.id, 1)}>
+                            <ThumbUp />
+                        </IconButton>
+                        <IconButton edge="end" onClick={() => onVote(suggestion.id, -1)}>
+                            <ThumbDown />
+                        </IconButton>
+                    </ListItemSecondaryAction>
+                </ListItem>
             ))}
-        </ul>
+        </List>
     );
 };
 
