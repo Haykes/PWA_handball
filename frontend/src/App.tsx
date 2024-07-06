@@ -94,7 +94,9 @@ const App: React.FC = () => {
 
     useEffect(() => {
         if ('serviceWorker' in navigator) {
-            subscribeUser();
+            navigator.serviceWorker.register('/service-worker.js').then(() => {
+                subscribeUser();
+            });
         }
     }, []);
 
