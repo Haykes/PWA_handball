@@ -33,7 +33,7 @@ const SuggestionForm: React.FC<SuggestionFormProps> = ({ onNewSuggestion }) => {
             });
 
             if (!response.ok) {
-                throw new Error('Network response was not ok');
+                throw new Error('La réponse du réseau n\'était pas correcte');
             }
 
             const suggestion = await response.json();
@@ -42,7 +42,7 @@ const SuggestionForm: React.FC<SuggestionFormProps> = ({ onNewSuggestion }) => {
             setDescription('');
             setAuthor('');
         } catch (error) {
-            console.error('Error submitting suggestion:', error);
+            console.error('Erreur lors de la soumission de la suggestion:', error);
         }
     };
 
@@ -54,7 +54,7 @@ const SuggestionForm: React.FC<SuggestionFormProps> = ({ onNewSuggestion }) => {
                 required
                 fullWidth
                 id="title"
-                label="Title"
+                label="Titre"
                 name="title"
                 value={title}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => setTitle(e.target.value)}
@@ -79,13 +79,13 @@ const SuggestionForm: React.FC<SuggestionFormProps> = ({ onNewSuggestion }) => {
                 required
                 fullWidth
                 name="author"
-                label="Author"
+                label="Auteur"
                 id="author"
                 value={author}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => setAuthor(e.target.value)}
             />
             <Button type="submit" fullWidth variant="contained" color="primary">
-                Submit
+                Soumettre
             </Button>
         </Box>
     );

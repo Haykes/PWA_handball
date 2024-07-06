@@ -29,7 +29,7 @@ const SuggestionList: React.FC<SuggestionListProps> = ({ suggestions, onVote }) 
                                 </Typography>
                                 <br />
                                 <Typography component="span" variant="body2" color="textSecondary">
-                                    By: {suggestion.author}
+                                    Par: {suggestion.author}
                                 </Typography>
                                 <br />
                                 <Typography component="span" variant="body2" color="textPrimary">

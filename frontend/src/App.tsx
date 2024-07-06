@@ -33,16 +33,16 @@ const App: React.FC = () => {
             try {
                 const response = await fetch('http://localhost:5000/api/suggestions');
                 if (!response.ok) {
-                    throw new Error('Network response was not ok');
+                    throw new Error('La réponse du réseau n\'était pas correcte');
                 }
                 const contentType = response.headers.get('content-type');
                 if (!contentType || !contentType.includes('application/json')) {
-                    throw new TypeError('Received response is not JSON');
+                    throw new TypeError('La réponse reçue n\'est pas au format JSON');
                 }
                 const data = await response.json();
                 setSuggestions(data);
             } catch (error) {
-                console.error('Error fetching suggestions:', error);
+                console.error('Erreur lors de la récupération des suggestions:', error);
             }
         };
         fetchSuggestions();
@@ -60,14 +60,14 @@ const App: React.FC = () => {
         })
             .then(response => {
                 if (!response.ok) {
-                    throw new Error('Network response was not ok');
+                    throw new Error('La réponse du réseau n\'était pas correcte');
                 }
                 return response.json();
             })
             .then(updatedSuggestion => {
                 setSuggestions(suggestions.map(s => (s.id === id ? updatedSuggestion : s)));
             })
-            .catch(error => console.error('Error voting:', error));
+            .catch(error => console.error('Erreur lors du vote:', error));
     };
 
     const subscribeUser = async () => {
@@ -77,7 +77,8 @@ const App: React.FC = () => {
                 userVisibleOnly: true,
                 applicationServerKey: applicationServerKey
             });
-            console.log('User is subscribed:', subscription);
+            console.log('L\'utilisateur est abonné:', subscription);
+
             const response = await fetch('http://localhost:5000/api/subscribe', {
                 method: 'POST',
                 headers: {
@@ -85,19 +86,24 @@ const App: React.FC = () => {
                 },
                 body: JSON.stringify(subscription)
             });
+
             if (!response.ok) {
-                throw new Error('Failed to subscribe the user');
+                throw new Error('Échec de l\'abonnement de l\'utilisateur');
             }
         } catch (error) {
-            console.error('Failed to subscribe the user:', error);
+            console.error('Échec de l\'abonnement de l\'utilisateur:', error);
         }
     };
 
     useEffect(() => {
         if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('/service-worker.js').then(() => {
-                subscribeUser();
-            });
+            navigator.serviceWorker.register('/service-worker.js')
+                .then(() => {
+                    subscribeUser();
+                })
+                .catch(error => {
+                    console.error('L\'enregistrement du service worker a échoué:', error);
+                });
         }
     }, []);
 
@@ -105,7 +111,7 @@ const App: React.FC = () => {
         <Container component="main" maxWidth="md">
             <CssBaseline />
             <Typography variant="h2" component="h1" gutterBottom>
-                Handball Idea Box
+                Boîte à Idées Handball
             </Typography>
             <SuggestionForm onNewSuggestion={handleNewSuggestion} />
             <SuggestionList suggestions={suggestions} onVote={handleVote} />

@@ -12,7 +12,7 @@ self.addEventListener('push', function(event) {
     console.log('Push received:', data);
     const options = {
         body: data.body,
-        icon: 'icons/icon-192x192.png'
+        icon: '/icons/android/android-launchericon-192-192.png'
     };
     event.waitUntil(
         self.registration.showNotification(data.title, options)
@@ -32,6 +32,9 @@ self.addEventListener('install', function(event) {
             .then(function(cache) {
                 return cache.addAll(urlsToCache);
             })
+            .catch(function(error) {
+                console.error('Failed to cache:', error);
+            })
     );
 });
 
@@ -39,7 +42,19 @@ self.addEventListener('fetch', function(event) {
     event.respondWith(
         caches.match(event.request)
             .then(function(response) {
-                return response || fetch(event.request);
+                if (response) {
+                    return response;
+                }
+                return fetch(event.request).then(function(response) {
+                    return caches.open(CACHE_NAME).then(function(cache) {
+                        cache.put(event.request, response.clone());
+                        return response;
+                    });
+                });
+            })
+            .catch(function(error) {
+                console.error('Fetching failed:', error);
+                throw error;
             })
     );
 });
